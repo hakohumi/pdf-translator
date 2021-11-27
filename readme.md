@@ -33,6 +33,13 @@ PDFファイルを翻訳するサービス
     - Windows: `https://blog.alivate.com.au/poppler-windows/`
     - 解凍してそのままプロジェクトディレクトリに追加する
 - ORC
+  - https://itport.cloud/?p=8326
+  - Tesseract
+    - インストール時に日本語用のスクリプトと言語を追加する設定を入れる
+    - Tesseractのインストールディレクトリ`C:\Program Files\Tesseract-OCR`にパスを通しておく
+    - 環境変数`TESSDATA_PREFIX`に`C:\Program Files\Tesseract-OCR\tessdata`を追加する
+  - PyOCR
+    - poetry add pyocr
 - 英語 to 日本語 翻訳API
 - PDFファイル操作
   - 読み込み、書き込み
