@@ -27,6 +27,11 @@ PDFファイルを翻訳するサービス
 
 - Python
 - PDF to 画像ファイル
+  - pdf2image
+  - poppler
+    - pdf2imageが依存する外部ライブラリ
+    - Windows: `https://blog.alivate.com.au/poppler-windows/`
+    - 解凍してそのままプロジェクトディレクトリに追加する
 - ORC
 - 英語 to 日本語 翻訳API
 - PDFファイル操作
