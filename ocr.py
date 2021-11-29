@@ -8,9 +8,8 @@ from pyocr.builders import LineBox, LineBoxBuilder, TextBuilder
 from pyocr.pyocr import get_available_tools, TOOLS
 import cv2
 
-# TODO: 座標が正しく取得できているのかを確認したい
-# 取得できた座標の位置に点を描画させる
-# 出力：元の画像データの上から点を描画し、新しい画像ファイルとして作成する
+
+# TODO: PDFが何単語あるのか、調査する
 
 if __name__ == "__main__":
     def _main():
