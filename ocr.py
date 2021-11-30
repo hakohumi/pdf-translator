@@ -1,17 +1,68 @@
 # 入力:画像データ
 # 出力:文字列
 
-from PIL import Image
-import sys
+from pathlib import Path
+from PIL import Image as pil
+from PIL.Image import Image
 from pyocr.tesseract import image_to_string
-from pyocr.builders import LineBox, LineBoxBuilder, TextBuilder
-from pyocr.pyocr import get_available_tools, TOOLS
-import cv2
+from pyocr.builders import LineBox, LineBoxBuilder
+from pyocr.pyocr import get_available_tools
 
 
 # TODO: PDFが何単語あるのか、調査する
 
+# TODO: 単語で情報を持つようにする
+# 文字と座標を持つ（pyocrからのデータそのままでもいい）
+
+
+class Ocr:
+    """
+    文章が描かれた画像データから文字列を抽出する
+    入力： 画像データ
+    出力： 文字列
+    """
+
+    def __init__(self) -> None:
+        pass
+
+    def image_open(self, image_path: Path) -> Image:
+        return pil.open(image_path)
+
+    def extract(self, image: Image):
+        text_info = self._text_info(image)
+        print(type(text_info))
+        if not isinstance(text_info, list):
+            raise Exception("未対応", type(text_info))
+        return self._join_strings(text_info)
+
+    def _text_info(self, image: Image):
+        line_boxs = image_to_string(
+            image,
+            lang="eng",
+            builder=LineBoxBuilder(tesseract_layout=6)
+        )
+        return line_boxs
+
+    def _join_strings(self, line_boxs: list):
+        ret_string: list[str] = []
+
+        for line in line_boxs:
+            if not isinstance(line, LineBox):
+                print(line)
+                print(type(line))
+                raise Exception("未対応のエラーです")
+
+            line_string: str = ""
+            for box in line.word_boxes:
+                line_string += box.content + " "
+            ret_string.append(line_string)
+
+        return ret_string
+
+
 if __name__ == "__main__":
+    import sys
+
     def _main():
         # コマンドライン引数で、ディレクトリを指定する
         tools = get_available_tools()
@@ -22,30 +73,12 @@ if __name__ == "__main__":
         tool = tools[0]
 
         print("Will use tool '%s'" % (tool.get_name()))
+
         image_path = "./image_file/test_01.png"
-        line_boxs = image_to_string(
-            Image.open(image_path),
-            lang="eng",
-            builder=LineBoxBuilder(tesseract_layout=6)
-        )
-        out = cv2.imread(image_path)
+        ocr = Ocr()
 
-        for line in line_boxs:
-            if not isinstance(line, LineBox):
-                print(line)
-                print(type(line))
-                raise Exception("未対応のエラーです")
-
-            line_string: str = ""
-            for box in line.word_boxes:
-                # print(box.position)
-                # print(box.content)
-                line_string += box.content + " "
-                cv2.rectangle(
-                    out, box.position[0], box.position[1], (0, 0, 255), 1)
-
-            print(line_string)
-            cv2.imshow("out", out)
-            cv2.waitKey(0)
+        image: Image = ocr.image_open(Path(image_path))
+        output_string = ocr.extract(image)
+        print("\n".join(output_string))
 
     _main()
