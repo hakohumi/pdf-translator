@@ -30,27 +30,34 @@ class Ocr:
 
     def extract(self, image: Image):
         text_info = self._text_info(image)
-        print(type(text_info))
         if not isinstance(text_info, list):
             raise Exception("未対応", type(text_info))
         return self._join_strings(text_info)
 
-    def _text_info(self, image: Image):
+    def _text_info(self, image: Image) -> list[LineBox]:
         line_boxs = image_to_string(
             image,
             lang="eng",
             builder=LineBoxBuilder(tesseract_layout=6)
         )
-        return line_boxs
 
-    def _join_strings(self, line_boxs: list):
-        ret_string: list[str] = []
+        if not isinstance(line_boxs, list):
+            print(line_boxs)
+            print(type(line_boxs))
+            raise Exception("line_boxsがlistではありません。")
 
         for line in line_boxs:
             if not isinstance(line, LineBox):
                 print(line)
                 print(type(line))
                 raise Exception("未対応のエラーです")
+
+        return line_boxs
+
+    def _join_strings(self, line_boxs: list[LineBox]):
+        ret_string: list[str] = []
+
+        for line in line_boxs:
 
             line_string: str = ""
             for box in line.word_boxes:
@@ -75,8 +82,8 @@ if __name__ == "__main__":
         print("Will use tool '%s'" % (tool.get_name()))
 
         image_path = "./image_file/test_01.png"
-        ocr = Ocr()
 
+        ocr = Ocr()
         image: Image = ocr.image_open(Path(image_path))
         output_string = ocr.extract(image)
         print("\n".join(output_string))
