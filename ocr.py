@@ -2,17 +2,19 @@
 # 出力:文字列
 
 from pathlib import Path
+from typing import Text
 from PIL import Image as pil
 from PIL.Image import Image
 from pyocr.tesseract import image_to_string
 from pyocr.builders import LineBox, LineBoxBuilder
 from pyocr.pyocr import get_available_tools
 
+from text_info import LineTextInfo
 
-# TODO: PDFが何単語あるのか、調査する
 
-# TODO: 単語で情報を持つようにする
-# 文字と座標を持つ（pyocrからのデータそのままでもいい）
+# PDFが何単語あるのか、調査する
+# 1ページ 3110文字
+# 3110文字 * 2180ページ = 約600万文字
 
 
 class Ocr:
@@ -29,12 +31,10 @@ class Ocr:
         return pil.open(image_path)
 
     def extract(self, image: Image):
-        text_info = self._text_info(image)
-        if not isinstance(text_info, list):
-            raise Exception("未対応", type(text_info))
-        return self._join_strings(text_info)
+        text_info_list: list[LineTextInfo] = self._text_info(image)
+        return text_info_list
 
-    def _text_info(self, image: Image) -> list[LineBox]:
+    def _text_info(self, image: Image) -> list[LineTextInfo]:
         line_boxs = image_to_string(
             image,
             lang="eng",
@@ -52,19 +52,12 @@ class Ocr:
                 print(type(line))
                 raise Exception("未対応のエラーです")
 
-        return line_boxs
-
-    def _join_strings(self, line_boxs: list[LineBox]):
-        ret_string: list[str] = []
-
+        line_text_info_list: list[LineTextInfo] = []
         for line in line_boxs:
-
-            line_string: str = ""
-            for box in line.word_boxes:
-                line_string += box.content + " "
-            ret_string.append(line_string)
-
-        return ret_string
+            line_box_info: LineTextInfo = LineTextInfo.generate_from_LineBoxList(
+                line)
+            line_text_info_list.append(line_box_info)
+        return line_text_info_list
 
 
 if __name__ == "__main__":
@@ -86,6 +79,9 @@ if __name__ == "__main__":
         ocr = Ocr()
         image: Image = ocr.image_open(Path(image_path))
         output_string = ocr.extract(image)
-        print("\n".join(output_string))
 
+        for line in output_string:
+            print(len(line), str(line))
+
+        print(f"total strings = {sum([len(line) for line in output_string])}")
     _main()
