@@ -26,6 +26,7 @@ PDFファイルを翻訳するサービス
 ## 要素技術
 
 - Python
+  - 3.9.6
 - PDF to 画像ファイル
   - pdf2image
   - poppler
