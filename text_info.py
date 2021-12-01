@@ -8,6 +8,9 @@ class Pos:
     x: int
     y: int
 
+    def get_tuple(self):
+        return (self.x, self.y)
+
 
 @dataclass
 class Word:
