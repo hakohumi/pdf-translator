@@ -12,7 +12,7 @@ from ocr import Ocr
 from text_info import LineTextInfo, Pos
 
 
-# TODO: オプションで、範囲の塗りつぶし、色を設定できるようにする
+# TODO: 文字列を図として貼り付けられる関数
 
 @dataclass
 class Color():
@@ -51,16 +51,30 @@ def draw_rectangle(
         end_pos: Pos,
         color: Color,
         fill: bool) -> Image:
-    dist_image: Image
 
     draw: ImageDraw = Draw(src_image)
-    color
+
     draw.rectangle(
         (start_pos.get_tuple(),
          end_pos.get_tuple()),
-        fill=color.get_tuple(),
+        fill=(color.get_tuple() if fill else None),
         outline=color.get_tuple())
-    # dist_image = src_image
+    return src_image
+
+
+def draw_rectangle_from_LineTextInfo_with_pillow(
+        src_image: Image,
+        line_boxs: list[LineTextInfo]) -> Image:
+
+    for line in line_boxs:
+        for word in line.text:
+            draw_rectangle(
+                src_image,
+                word.start_pos,
+                word.end_pos,
+                Color(255, 255, 255),
+                True)
+
     return src_image
 
 
@@ -84,11 +98,11 @@ if __name__ == "__main__":
         image_path = "./image_file/test_01.png"
         ocr = Ocr()
         image = ocr.image_open(Path(image_path))
-        # draw_rectangle_from_LineTextInfo(image, ocr._text_info(image))
-        image = draw_rectangle(
-            image, Pos(
-                0, 0), Pos(
-                100, 100), Color(255, 0, 255), False)
-        image.show("tes")
+        image2 = draw_rectangle_from_LineTextInfo_with_pillow(
+            image, ocr._text_info(image))
+        image2.show()
+        image3 = draw_rectangle_from_LineTextInfo_with_pillow(
+            image2, ocr._text_info(image2))
+        image3.show()
 
     _main()
