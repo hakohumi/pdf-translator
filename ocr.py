@@ -3,7 +3,6 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Text
 from PIL import Image as pil
 from PIL.Image import Image
 from pyocr.tesseract import image_to_string
@@ -32,6 +31,7 @@ class ResultOcr:
 # TODO: 内部で変動する情報を持たない、イミュータブルにする
 # TODO: OCRしたあとは別のインスタンスを作成し返すようにする
 # TODO: 内部で画像データ、文字列を持つ
+
 
 class Ocr:
     """

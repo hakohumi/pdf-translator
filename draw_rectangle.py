@@ -11,8 +11,6 @@ from ocr import Ocr
 from text_info import LineTextInfo, Pos
 
 
-# TODO: 文字列を図として貼り付けられる関数
-
 @dataclass
 class Color():
     r: int
@@ -57,13 +55,17 @@ def draw_rectangle(
         (start_pos.get_tuple(),
          end_pos.get_tuple()),
         fill=(color.get_tuple() if fill else None),
-        outline=color.get_tuple())
+        outline=color.get_tuple(),
+        width=1)
     return src_image
 
 
 def draw_rectangle_from_LineTextInfo_with_pillow(
-        src_image: Image.Image,
-        line_boxs: list[LineTextInfo]) -> Image.Image:
+    src_image: Image.Image,
+    line_boxs: list[LineTextInfo],
+    color: Color = Color(255, 255, 255),
+    fill: bool = False
+) -> Image.Image:
 
     for line in line_boxs:
         for word in line.text:
@@ -71,8 +73,8 @@ def draw_rectangle_from_LineTextInfo_with_pillow(
                 src_image,
                 word.start_pos,
                 word.end_pos,
-                Color(255, 255, 255),
-                True)
+                color,
+                fill)
 
     return src_image
 
@@ -92,7 +94,18 @@ def draw_rectangle_from_LineTextInfo(
         cv2.waitKey(0)
 
 
-# def draw_string():
+def draw_string(
+        src_image: Image.Image,
+        start_pos: Pos,
+        end_pos: Pos,
+        strings: str,
+        color: Color) -> Image.Image:
+    draw: ImageDraw.ImageDraw = ImageDraw.Draw(src_image)
+    fontsize = 20
+    fnt = ImageFont.truetype("C:\\Windows\\Fonts\\meiryob.ttc", fontsize)
+    draw.text(start_pos.get_tuple(), strings, font=fnt,
+              fill=color.get_tuple(),)
+    return src_image
 
 
 if __name__ == "__main__":
@@ -100,11 +113,28 @@ if __name__ == "__main__":
         image_path = "./image_file/test_01.png"
         ocr = Ocr()
         image = ocr.image_open(Path(image_path))
-        image2 = draw_rectangle_from_LineTextInfo_with_pillow(
-            image, ocr._text_info(image))
-        image2.show()
-        image3 = draw_rectangle_from_LineTextInfo_with_pillow(
-            image2, ocr._text_info(image2))
+        image.show()
+
+        result_ocr = ocr._text_info(image)
+
+        image_not_fill = draw_rectangle_from_LineTextInfo_with_pillow(
+            image, result_ocr, Color(255, 0, 0), False)
+        image_not_fill.show()
+
+        image_fill = draw_rectangle_from_LineTextInfo_with_pillow(
+            image, result_ocr, Color(255, 255, 255), True)
+        image_fill.show()
+
+        image3 = image_fill
+        for line in result_ocr:
+            for word in line.text:
+                draw_string(
+                    image3,
+                    word.start_pos,
+                    word.end_pos,
+                    word.text,
+                    Color(255, 0, 0))
+
         image3.show()
 
     _main()
