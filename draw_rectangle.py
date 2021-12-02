@@ -2,8 +2,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Tuple
-from PIL.Image import Image
-from PIL.ImageDraw import ImageDraw, Draw
+from PIL import Image, ImageDraw, ImageFont
 from pyocr.builders import LineBox
 import cv2
 
@@ -28,7 +27,7 @@ class Color():
 
 
 def draw_rectangle_from_LineBox(
-        image: Image,
+        image: Image.Image,
         line_boxs: list[LineBox]) -> None:
 
     out = pil2cv(image)
@@ -46,13 +45,13 @@ def draw_rectangle_from_LineBox(
 
 
 def draw_rectangle(
-        src_image: Image,
+        src_image: Image.Image,
         start_pos: Pos,
         end_pos: Pos,
         color: Color,
-        fill: bool) -> Image:
+        fill: bool) -> Image.Image:
 
-    draw: ImageDraw = Draw(src_image)
+    draw: ImageDraw.ImageDraw = ImageDraw.Draw(src_image)
 
     draw.rectangle(
         (start_pos.get_tuple(),
@@ -63,8 +62,8 @@ def draw_rectangle(
 
 
 def draw_rectangle_from_LineTextInfo_with_pillow(
-        src_image: Image,
-        line_boxs: list[LineTextInfo]) -> Image:
+        src_image: Image.Image,
+        line_boxs: list[LineTextInfo]) -> Image.Image:
 
     for line in line_boxs:
         for word in line.text:
@@ -79,7 +78,7 @@ def draw_rectangle_from_LineTextInfo_with_pillow(
 
 
 def draw_rectangle_from_LineTextInfo(
-        src_image: Image,
+        src_image: Image.Image,
         line_boxs: list[LineTextInfo]) -> None:
 
     out = pil2cv(src_image)
@@ -91,6 +90,9 @@ def draw_rectangle_from_LineTextInfo(
 
         cv2.imshow("out", out)
         cv2.waitKey(0)
+
+
+# def draw_string():
 
 
 if __name__ == "__main__":
