@@ -1,8 +1,8 @@
 # 入力:画像データ
 # 出力:文字列
 
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Text
 from PIL import Image as pil
 from PIL.Image import Image
 from pyocr.tesseract import image_to_string
@@ -15,6 +15,22 @@ from text_info import LineTextInfo
 # PDFが何単語あるのか、調査する
 # 1ページ 3110文字
 # 3110文字 * 2180ページ = 約600万文字
+
+# TODO: OCRクラスにカプセル化させる
+
+@dataclass
+class ResultOcr:
+    texts: list[LineTextInfo]
+
+    def show(self):
+        for line in self.texts:
+            print(len(line), str(line))
+
+        print(f"total strings = {sum([len(line) for line in self.texts])}")
+
+# TODO: 内部で変動する情報を持たない、イミュータブルにする
+# TODO: OCRしたあとは別のインスタンスを作成し返すようにする
+# TODO: 内部で画像データ、文字列を持つ
 
 
 class Ocr:
@@ -31,8 +47,7 @@ class Ocr:
         return pil.open(image_path)
 
     def extract(self, image: Image):
-        text_info_list: list[LineTextInfo] = self._text_info(image)
-        return text_info_list
+        return ResultOcr(self._text_info(image))
 
     def _text_info(self, image: Image) -> list[LineTextInfo]:
         line_boxs = image_to_string(
@@ -80,8 +95,6 @@ if __name__ == "__main__":
         image: Image = ocr.image_open(Path(image_path))
         output_string = ocr.extract(image)
 
-        for line in output_string:
-            print(len(line), str(line))
+        output_string.show()
 
-        print(f"total strings = {sum([len(line) for line in output_string])}")
     _main()
