@@ -3,10 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Tuple
 from PIL import Image, ImageDraw, ImageFont
-from pyocr.builders import LineBox
-import cv2
 
-from image_util import pil2cv
 from ocr import Ocr
 from text_info import LineTextInfo, Pos
 
@@ -22,24 +19,6 @@ class Color():
 
     def get_tuple(self) -> Tuple[int, int, int]:
         return (self.r, self.g, self.b)
-
-
-def draw_rectangle_from_LineBox(
-        image: Image.Image,
-        line_boxs: list[LineBox]) -> None:
-
-    out = pil2cv(image)
-
-    for line in line_boxs:
-        line_string: str = ""
-        for box in line.word_boxes:
-            line_string += box.content + " "
-            cv2.rectangle(
-                out, box.position[0], box.position[1], (0, 0, 255), 1)
-
-        print(line_string)
-        cv2.imshow("out", out)
-        cv2.waitKey(0)
 
 
 def draw_rectangle(
@@ -60,7 +39,7 @@ def draw_rectangle(
     return src_image
 
 
-def draw_rectangle_from_LineTextInfo_with_pillow(
+def draw_rectangle_from_LineTextInfo(
     src_image: Image.Image,
     line_boxs: list[LineTextInfo],
     color: Color = Color(255, 255, 255),
@@ -77,21 +56,6 @@ def draw_rectangle_from_LineTextInfo_with_pillow(
                 fill)
 
     return src_image
-
-
-def draw_rectangle_from_LineTextInfo(
-        src_image: Image.Image,
-        line_boxs: list[LineTextInfo]) -> None:
-
-    out = pil2cv(src_image)
-
-    for line in line_boxs:
-        for word in line.text:
-            cv2.rectangle(out, word.start_pos.get_tuple(),
-                          word.end_pos.get_tuple(), (0, 0, 255), 1)
-
-        cv2.imshow("out", out)
-        cv2.waitKey(0)
 
 
 def draw_string(
@@ -117,11 +81,11 @@ if __name__ == "__main__":
 
         result_ocr = ocr._text_info(image)
 
-        image_not_fill = draw_rectangle_from_LineTextInfo_with_pillow(
+        image_not_fill = draw_rectangle_from_LineTextInfo(
             image, result_ocr, Color(255, 0, 0), False)
         image_not_fill.show()
 
-        image_fill = draw_rectangle_from_LineTextInfo_with_pillow(
+        image_fill = draw_rectangle_from_LineTextInfo(
             image, result_ocr, Color(255, 255, 255), True)
         image_fill.show()
 
