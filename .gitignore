@@ -147,3 +147,5 @@ cython_debug/
 poppler**/
 pdf_file/
 image_file/
+
+minna_api.ini

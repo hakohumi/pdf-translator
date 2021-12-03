@@ -27,6 +27,8 @@ TODO: 最終的なパッケージとしての使い方、実行環境の構築�
 
 ## 要素技術
 
+TODO: 上の流れと同じような構成にする、モジュール単位
+
 - Python
   - 3.9.6
 - PDF to 画像ファイル
@@ -44,6 +46,11 @@ TODO: 最終的なパッケージとしての使い方、実行環境の構築�
   - PyOCR
     - poetry add pyocr
 - 英語 to 日本語 翻訳API
+  - [みんなの自動翻訳＠TexTra®](https://mt-auto-minhon-mlt.ucri.jgn-x.jp/content/menu/)
+    - プロジェクトのルートに、「minna_api.ini」ファイルを作成する必要がある。
+      - 中には、
+        - NAME, KEY, SECRET,
+        - URL
 - PDFファイル操作
   - 読み込み、書き込み
   - オブジェクトの挿入
