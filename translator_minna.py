@@ -18,9 +18,9 @@ if not os.path.exists(config_ini_path):
             errno.ENOENT), config_ini_path)
 
 config_ini.read(config_ini_path, encoding="utf-8")
-NAME = config_ini["api"]["NAME"]
-KEY = config_ini["api"]["KEY"]
-SECRET = config_ini["api"]["SECRET"]
+NAME = config_ini["API"]["NAME"]
+KEY = config_ini["API"]["KEY"]
+SECRET = config_ini["API"]["SECRET"]
 URL = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalNT_en_ja/"
 
 

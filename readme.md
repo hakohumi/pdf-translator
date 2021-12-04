@@ -49,8 +49,8 @@ TODO: 上の流れと同じような構成にする、モジュール単位
   - [みんなの自動翻訳＠TexTra®](https://mt-auto-minhon-mlt.ucri.jgn-x.jp/content/menu/)
     - プロジェクトのルートに、「minna_api.ini」ファイルを作成する必要がある。
       - 中には、
-        - NAME, KEY, SECRET,
-        - URL
+        - セクション名: API
+        - キー: NAME, KEY, SECRET
 - PDFファイル操作
   - 読み込み、書き込み
   - オブジェクトの挿入
