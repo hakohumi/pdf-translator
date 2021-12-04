@@ -8,44 +8,68 @@ from configparser import ConfigParser
 import json
 import errno
 
-config_ini = ConfigParser()
+from translator import Translate
 
-config_ini_path = "./minna_api.ini"
-# 指定したiniファイルが存在しない場合、エラー発生
-if not os.path.exists(config_ini_path):
-    raise FileNotFoundError(
-        errno.ENOENT, os.strerror(
-            errno.ENOENT), config_ini_path)
-
-config_ini.read(config_ini_path, encoding="utf-8")
-NAME = config_ini["API"]["NAME"]
-KEY = config_ini["API"]["KEY"]
-SECRET = config_ini["API"]["SECRET"]
-URL = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalNT_en_ja/"
+# 入力は英語
+# 出力は日本語
 
 
-consumer = OAuth1(KEY, SECRET)
+class Translator(Translate):
+    def __init__(self):
+        config_ini = ConfigParser()
 
-params = {
-    'key': KEY,
-    'name': NAME,
-    "type": "json",
-    "text": "hello"
-}    # その他のパラメータについては、各APIのリクエストパラメータに従って設定してください。
+        config_ini_path = "./minna_api.ini"
+        # 指定したiniファイルが存在しない場合、エラー発生
+        if not os.path.exists(config_ini_path):
+            raise FileNotFoundError(
+                errno.ENOENT, os.strerror(
+                    errno.ENOENT), config_ini_path)
 
-try:
-    res = req.post(URL, data=params, auth=consumer)
-    res.encoding = 'utf-8'
-    print("[res]")
-    print(res)
-    # print(res.text)
+        config_ini.read(config_ini_path, encoding="utf-8")
+        self.NAME = config_ini["API"]["NAME"]
+        self.KEY = config_ini["API"]["KEY"]
+        self.SECRET = config_ini["API"]["SECRET"]
+        self.URL = "https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalNT_en_ja/"
 
-    result_json: dict = json.loads(res.text)
+        self.consumer = OAuth1(self.KEY, self.SECRET)
 
-    print(json.dumps(result_json, indent=2))
+    def translate(self, src_japanese: str) -> str:
+        params = {
+            'key': self.KEY,
+            'name': self.NAME,
+            "type": "json",
+            "text": src_japanese
+        }    # その他のパラメータについては、各APIのリクエストパラメータに従って設定してください。
+        out_print: str = ""
+        res = req.post(self.URL, data=params, auth=self.consumer)
+        res.encoding = 'utf-8'
+        # print(res)
+        # print(res.text)
 
-except Exception as e:
-    print('=== Error ===')
-    print('type:' + str(type(e)))
-    print('args:' + str(e.args))
-    print('e:' + str(e))
+        result_json = {}
+
+        try:
+            result_json = json.loads(res.text)
+
+        except Exception as e:
+            print('=== Error ===')
+            print('type:' + str(type(e)))
+            print('args:' + str(e.args))
+            print('e:' + str(e))
+            raise e
+
+        # out_print: str = json.dumps(result_json, indent=2)
+        out_print = result_json["resultset"]["result"]["text"]
+
+        return out_print
+
+
+if __name__ == "__main__":
+    def _main():
+        translator = Translator()
+
+        a = translator.translate("box")
+
+        print(a)
+
+    _main()
