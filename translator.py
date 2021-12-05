@@ -4,6 +4,8 @@
 from abc import ABCMeta, abstractmethod
 
 
+# TODO: 非同期で実行できるようにする
+
 class Translator(metaclass=ABCMeta):
 
     @abstractmethod

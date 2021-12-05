@@ -1,7 +1,6 @@
 # 入力:画像データ
 # 出力:文字列
 
-from dataclasses import dataclass
 from pathlib import Path
 from PIL import Image as pil
 from PIL.Image import Image
@@ -9,23 +8,12 @@ from pyocr.tesseract import image_to_string
 from pyocr.builders import LineBox, LineBoxBuilder
 from pyocr.pyocr import get_available_tools
 
-from text_info import LineTextInfo
+from text_info import TextInfoLine, TextInfoOnePage
 
 
 # PDFが何単語あるのか、調査する
 # 1ページ 3110文字
 # 3110文字 * 2180ページ = 約600万文字
-
-# TODO: OCRクラスにカプセル化させる
-
-@dataclass
-class OcrTextInfoOnePage:
-    texts: list[LineTextInfo]
-
-    def show(self):
-        for line in self.texts:
-            print(len(line), str(line))
-        print(f"total strings = {sum([len(line) for line in self.texts])}")
 
 # TODO: 内部で変動する情報を持たない、イミュータブルにする
 # TODO: OCRしたあとは別のインスタンスを作成し返すようにする
@@ -46,9 +34,9 @@ class Ocr:
         return pil.open(image_path)
 
     def extract(self, image: Image):
-        return OcrTextInfoOnePage(self._text_info(image))
+        return TextInfoOnePage(self._text_info(image))
 
-    def _text_info(self, image: Image) -> list[LineTextInfo]:
+    def _text_info(self, image: Image) -> list[TextInfoLine]:
         line_boxs = image_to_string(
             image,
             lang="eng",
@@ -66,9 +54,9 @@ class Ocr:
                 print(type(line))
                 raise Exception("未対応のエラーです")
 
-        line_text_info_list: list[LineTextInfo] = []
+        line_text_info_list: list[TextInfoLine] = []
         for line in line_boxs:
-            line_box_info: LineTextInfo = LineTextInfo.generate_from_LineBoxList(
+            line_box_info: TextInfoLine = TextInfoLine.generate_from_LineBoxList(
                 line)
             line_text_info_list.append(line_box_info)
         return line_text_info_list
