@@ -30,9 +30,10 @@ class LineTextInfo:
     """
      文章情報
     """
-    text: list[Word]
     start_pos: Pos
     end_pos: Pos
+    text: list[Word]
+    translated_text: Optional[str]
 
     def __str__(self) -> str:
         a = [str(word) for word in self.text]
