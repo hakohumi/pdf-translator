@@ -19,13 +19,12 @@ from text_info import LineTextInfo
 # TODO: OCRクラスにカプセル化させる
 
 @dataclass
-class ResultOcr:
+class OcrTextInfoOnePage:
     texts: list[LineTextInfo]
 
     def show(self):
         for line in self.texts:
             print(len(line), str(line))
-
         print(f"total strings = {sum([len(line) for line in self.texts])}")
 
 # TODO: 内部で変動する情報を持たない、イミュータブルにする
@@ -47,7 +46,7 @@ class Ocr:
         return pil.open(image_path)
 
     def extract(self, image: Image):
-        return ResultOcr(self._text_info(image))
+        return OcrTextInfoOnePage(self._text_info(image))
 
     def _text_info(self, image: Image) -> list[LineTextInfo]:
         line_boxs = image_to_string(
