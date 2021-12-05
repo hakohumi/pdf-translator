@@ -51,6 +51,7 @@ class LineTextInfo:
             texts.append(Word(box.content, start_pos, end_pos))
 
         line_text_info: LineTextInfo = LineTextInfo(
-            texts, Pos(0, 0), Pos(0, 0))
+            texts[0].start_pos, texts[0].end_pos, texts, None
+        )
 
         return line_text_info
