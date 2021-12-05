@@ -8,13 +8,13 @@ from configparser import ConfigParser
 import json
 import errno
 
-from translator import Translate
+from translator import Translator
 
 # 入力は英語
 # 出力は日本語
 
 
-class Translator(Translate):
+class Translator(Translator):
     def __init__(self):
         config_ini = ConfigParser()
 

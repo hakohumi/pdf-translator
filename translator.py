@@ -4,7 +4,7 @@
 from abc import ABCMeta, abstractmethod
 
 
-class Translate(metaclass=ABCMeta):
+class Translator(metaclass=ABCMeta):
 
     @abstractmethod
     def translate(self, src_japanese: str) -> str:

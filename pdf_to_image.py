@@ -8,6 +8,8 @@ poppler_dir = Path(__file__).parent.absolute() / "poppler/bin"
 os.environ["PATH"] += os.pathsep + str(poppler_dir)
 
 
+# TODO: 出力されるファイル名のルールを明記する
+
 def convert_pdf_to_png(pdf_path: Path):
     # PDF -> Image に変換（150dpi）
     pages = convert_from_path(str(pdf_path), 200)
