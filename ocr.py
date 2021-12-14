@@ -4,7 +4,7 @@
 from pathlib import Path
 from PIL import Image as pil
 from PIL.Image import Image
-from pyocr.tesseract import image_to_string
+import pyocr.tesseract as TES
 from pyocr.builders import LineBox, LineBoxBuilder
 from pyocr.pyocr import get_available_tools
 
@@ -37,7 +37,7 @@ class Ocr:
         return TextInfoOnePage(self._text_info(image))
 
     def _text_info(self, image: Image) -> list[TextInfoLine]:
-        line_boxs = image_to_string(
+        line_boxs = TES.image_to_string(
             image,
             lang="eng",
             builder=LineBoxBuilder(tesseract_layout=6)

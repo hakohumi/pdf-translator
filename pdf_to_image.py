@@ -1,7 +1,8 @@
 import os
 import sys
 from pathlib import Path
-from pdf2image import convert_from_path
+# from pdf2image import convert_from_path
+import pdf2image as P2I
 
 # poppler/binを環境変数PATHに追加する
 poppler_dir = Path(__file__).parent.absolute() / "poppler/bin"
@@ -11,8 +12,9 @@ os.environ["PATH"] += os.pathsep + str(poppler_dir)
 # TODO: 出力されるファイル名のルールを明記する
 
 def convert_pdf_to_png(pdf_path: Path, dist_image_path: Path):
+    print("変換開始 pdf -> png")
     # PDF -> Image に変換（150dpi）
-    pages = convert_from_path(str(pdf_path), 200)
+    pages = P2I.convert_from_path(str(pdf_path), 200)
 
     # 画像ファイルを１ページずつ保存
     for i, page in enumerate(pages):
