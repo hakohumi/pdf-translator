@@ -10,15 +10,14 @@ os.environ["PATH"] += os.pathsep + str(poppler_dir)
 
 # TODO: 出力されるファイル名のルールを明記する
 
-def convert_pdf_to_png(pdf_path: Path):
+def convert_pdf_to_png(pdf_path: Path, dist_image_path: Path):
     # PDF -> Image に変換（150dpi）
     pages = convert_from_path(str(pdf_path), 200)
 
     # 画像ファイルを１ページずつ保存
-    image_dir = Path("./image_file")
     for i, page in enumerate(pages):
         file_name = pdf_path.stem + "_{:02d}".format(i + 1) + ".png"
-        image_path = image_dir / file_name
+        image_path = dist_image_path / file_name
 
         print(image_path)
         # JPEGで保存
@@ -34,6 +33,8 @@ if __name__ == "__main__":
         else:
             raise Exception("PDFファイルのパスを指定してください。")
 
-        convert_pdf_to_png(pdf_path)
+        dist_image_path = Path("./image_file")
+
+        convert_pdf_to_png(pdf_path, dist_image_path)
 
     _main()
