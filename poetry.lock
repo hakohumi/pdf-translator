@@ -127,7 +127,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pyocr"
-version = "0.8"
+version = "0.8.1"
 description = "A Python wrapper for OCR engines (Tesseract, Cuneiform, etc)"
 category = "main"
 optional = false
@@ -344,7 +344,7 @@ pyflakes = [
     {file = "pyflakes-2.4.0.tar.gz", hash = "sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c"},
 ]
 pyocr = [
-    {file = "pyocr-0.8.tar.gz", hash = "sha256:520d5caf71c22164c0cb2c0754c97813f44117240ff191575d3a3a66e45c61e6"},
+    {file = "pyocr-0.8.1.tar.gz", hash = "sha256:02aa03b10e0d40b1b29af8394f9c1320f3dab5e0eeae4c1938b3054ce7f66f65"},
 ]
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
