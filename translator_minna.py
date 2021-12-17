@@ -14,7 +14,7 @@ from translator import Translator
 # 出力は日本語
 
 
-class Translator(Translator):
+class TranslatorMinna(Translator):
     def __init__(self):
         config_ini = ConfigParser()
 
@@ -66,7 +66,7 @@ class Translator(Translator):
 
 if __name__ == "__main__":
     def _main():
-        translator = Translator()
+        translator = TranslatorMinna()
 
         a = translator.translate("box")
 

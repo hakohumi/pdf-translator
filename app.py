@@ -7,7 +7,7 @@ from ocr import Ocr, TextInfoOnePage
 
 from pdf_to_image import convert_pdf_to_png
 from text_info import TextInfoLine
-from translator_minna import Translator
+from translator_minna import TranslatorMinna
 
 
 if __name__ == "__main__":
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             # TODO: 1ページを段組ごとに分けて翻訳する
             # TODO: 段組単位で単語、行を文章へ変換する
             # TODO: 翻訳
-            translator = Translator()
+            translator = TranslatorMinna()
             translated_texts: list[TextInfoLine] = []
             for line in result_ocr.texts:
                 translated_word_text: str = translator.translate(str(line))
@@ -55,7 +55,6 @@ if __name__ == "__main__":
                 translated_texts.append(translated_line_text_info)
             one_page_text_info = TextInfoOnePage(translated_texts)
 
-            # TODO: 日本語の貼り付け
             for line in one_page_text_info.texts:
                 if line.translated_text is not None:
                     draw_string(
