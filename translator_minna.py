@@ -58,6 +58,15 @@ class TranslatorMinna(Translator):
             print('e:' + str(e))
             raise e
 
+        # ステータスコードの例外処理
+        ret_code = result_json["resultset"]["code"]
+        print(f"{ret_code=}")
+
+        if ret_code == 531:
+            raise Exception("翻訳サーバーがダウンしています。")
+
+        # ------------------------
+
         # out_print: str = json.dumps(result_json, indent=2)
         out_print = result_json["resultset"]["result"]["text"]
 
@@ -66,6 +75,7 @@ class TranslatorMinna(Translator):
 
 if __name__ == "__main__":
     def _main():
+        print(f"start {__file__} main")
         translator = TranslatorMinna()
 
         a = translator.translate("box")
