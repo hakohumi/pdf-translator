@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Tuple
 from PIL import Image, ImageDraw, ImageFont
 
-from ocr import Ocr
-from text_info import LineTextInfo, Pos
+from ocr import Ocr, TextInfoOnePage
+from text_info import Pos
 
 
 @dataclass
@@ -41,12 +41,12 @@ def draw_rectangle(
 
 def draw_rectangle_from_LineTextInfo(
     src_image: Image.Image,
-    line_boxs: list[LineTextInfo],
+    line_boxs: TextInfoOnePage,
     color: Color = Color(255, 255, 255),
     fill: bool = False
 ) -> Image.Image:
 
-    for line in line_boxs:
+    for line in line_boxs.texts:
         for word in line.text:
             draw_rectangle(
                 src_image,
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         image = ocr.image_open(Path(image_path))
         image.show()
 
-        result_ocr = ocr._text_info(image)
+        result_ocr = ocr.extract(image)
 
         image_not_fill = draw_rectangle_from_LineTextInfo(
             image, result_ocr, Color(255, 0, 0), False)
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         image_fill.show()
 
         image3 = image_fill
-        for line in result_ocr:
+        for line in result_ocr.texts:
             for word in line.text:
                 draw_string(
                     image3,

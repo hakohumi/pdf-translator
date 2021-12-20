@@ -8,13 +8,13 @@ from configparser import ConfigParser
 import json
 import errno
 
-from translator import Translate
+from translator import Translator
 
 # 入力は英語
 # 出力は日本語
 
 
-class Translator(Translate):
+class TranslatorMinna(Translator):
     def __init__(self):
         config_ini = ConfigParser()
 
@@ -58,6 +58,15 @@ class Translator(Translate):
             print('e:' + str(e))
             raise e
 
+        # ステータスコードの例外処理
+        ret_code = result_json["resultset"]["code"]
+        print(f"{ret_code=}")
+
+        if ret_code == 531:
+            raise Exception("翻訳サーバーがダウンしています。")
+
+        # ------------------------
+
         # out_print: str = json.dumps(result_json, indent=2)
         out_print = result_json["resultset"]["result"]["text"]
 
@@ -66,7 +75,8 @@ class Translator(Translate):
 
 if __name__ == "__main__":
     def _main():
-        translator = Translator()
+        print(f"start {__file__} main")
+        translator = TranslatorMinna()
 
         a = translator.translate("box")
 
